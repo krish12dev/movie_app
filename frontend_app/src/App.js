@@ -1,9 +1,10 @@
 import './App.css';
+import RoutePage from './Router/RoutePage';
 
 function App() {
   return (
-    <div className="App">
-      <h1>welcome to home page</h1>
+    <div >
+      <RoutePage/>
     </div>
   );
 }
