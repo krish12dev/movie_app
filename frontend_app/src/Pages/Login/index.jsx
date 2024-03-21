@@ -4,6 +4,7 @@ import { Strings } from "../../Strings";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./login.css";
+import { displayErrorToast, displaySuccessToast } from "../../toaster/toaster";
 
 const LoginPage = () => {
   // all local states
@@ -12,27 +13,27 @@ const LoginPage = () => {
   const [formError, setFormError] = useState({});
 
   // all hooks
-  const navigator = useNavigate()
+  const navigator = useNavigate();
 
   // all effects
 
   const submitHandler = (e) => {
     e.preventDefault();
     setFormError(validate(formValue));
-    axios.post("http://localhost:8080/login",formValue)
-    .then((res)=>{
-      console.log({res});
-     if(res.data.success){
-      if(!res?.data?.token){
-        throw new Error('Token is not available.')
-      }
-        localStorage.setItem("token",res.data.token)
-        navigator('/')
-        alert(res?.data?.message)
-     }
-      
-    })
-    .catch((err)=> console.log(err))
+    axios
+      .post("http://localhost:8080/login", formValue)
+      .then((res) => {
+        console.log({ res });
+        if (res.data.success) {
+          if (!res?.data?.token) {
+            throw new Error("Token is not available.");
+          }
+          localStorage.setItem("token", res.data.token);
+          displaySuccessToast(res?.data?.message);
+          navigator("/");
+        }
+      })
+      .catch((err) => console.log(err));
   };
   const validate = (values) => {
     const errors = {};

@@ -38,12 +38,12 @@ app.post("/login", async (req, res) => {
           expiresIn: "1h",
         });
 
-        res.send({ message: "Login successful", token: token, success: true });
+        res.status(200).json({ message: "Login successful", token: token, success: true });
       } else {
-        res.send({ message: "Password does not match", success: false });
+        res.status(401).json({ message: "email & Password does not match", success: false });
       }
     } else {
-      res.send({ message: "User not registered", success: false });
+      res.status(401).json({ message: "User not registered", success: false });
     }
   } catch (err) {
     console.error("Error:", err);
@@ -57,11 +57,11 @@ app.post("/register", async (req, res) => {
   try {
     const existingUser = await User.findOne({ email: email });
     if (existingUser) {
-      res.send({ message: "User already registered", success: false });
+      res.res.status(409).json({ message: "User already registered", success: false });
     } else {
       const newUser = new User({ name: username, email, password });
       await newUser.save();
-      res.send({
+      res.res.status(200).json({
         message: "Successfully registered. Please login now.",
         success: true,
       });
