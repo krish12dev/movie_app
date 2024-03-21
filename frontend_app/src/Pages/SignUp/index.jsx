@@ -12,6 +12,7 @@ const SignUp = () => {
     email: "",
     password: "",
     reEnterPassword: "",
+    role: "",
   };
   const [formValue, setFormValue] = useState(initialState);
   const [formError, setFormError] = useState({});
@@ -19,8 +20,8 @@ const SignUp = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    const { username, email, password, reEnterPassword } = formValue;
-    if (username && email && password === reEnterPassword) {
+    const { username, email, password, reEnterPassword,role } = formValue;
+    if (username && email && password === reEnterPassword && role) {
       axios
         .post("http://localhost:8080/register", formValue)
         .then((res) => {
@@ -33,6 +34,7 @@ const SignUp = () => {
     console.log("formValue", formValue);
   };
   const validate = (values) => {
+    debugger
     const errors = {};
     const emailValid = /\S+@\S+\.\S+/;
     if (!values.email) {
@@ -40,14 +42,16 @@ const SignUp = () => {
     } else if (!emailValid.test(values.email)) {
       errors.email = "Please enter a valid email address";
     }
-    if(!values.password){
-      errors.password = "Please Enter password"
-    }if(!values?.userName){
-      errors.userName = "Please enter user name"
-    }if(!values.reEnterPassword){
-      errors.reEnterPassword = "Please enter the confirm password"
-    }else if(values?.password !== values?.reEnterPassword){
-      errors.reEnterPassword = "Password didn't match"
+    if (!values.password) {
+      errors.password = "Please Enter password";
+    }
+    if (!values?.username) {
+      errors.username = "Please enter user name";
+    }
+    if (!values.reEnterPassword) {
+      errors.reEnterPassword = "Please enter the confirm password";
+    } else if (values?.password !== values?.reEnterPassword) {
+      errors.reEnterPassword = "Password didn't match";
     }
     return errors;
   };
@@ -55,6 +59,7 @@ const SignUp = () => {
     const { name, value } = e.target;
     setFormValue({ ...formValue, [name]: value });
   };
+  
   return (
     <>
       <form
@@ -75,7 +80,9 @@ const SignUp = () => {
             onChangeHandler={changeHandler}
             placeholdername={Strings.userName}
           />
-          <p className="text-red-800 bg-red-50 dark:text-red-400">{formError.userName}</p>
+          <p className="text-red-800 bg-red-50 dark:text-red-400">
+            {formError.username}
+          </p>
           <label className="font-medium" htmlFor="emnail">
             {Strings.email}
           </label>
@@ -86,7 +93,9 @@ const SignUp = () => {
             onChangeHandler={changeHandler}
             placeholdername={Strings.email}
           />
-           <p className="text-red-800 bg-red-50 dark:text-red-400">{formError.email}</p>
+          <p className="text-red-800 bg-red-50 dark:text-red-400">
+            {formError.email}
+          </p>
           <label className="font-medium" htmlFor="psw">
             Password
           </label>
@@ -97,7 +106,9 @@ const SignUp = () => {
             onChangeHandler={changeHandler}
             placeholdername={Strings.password}
           />
-           <p className="text-red-800 bg-red-50 dark:text-red-400">{formError.password}</p>
+          <p className="text-red-800 bg-red-50 dark:text-red-400">
+            {formError.password}
+          </p>
           <label className="font-medium">Confirm password</label>
           <Input
             types="password"
@@ -106,7 +117,22 @@ const SignUp = () => {
             onChangeHandler={changeHandler}
             placeholdername={Strings.confirmPassword}
           />
-           <p className="text-red-800 bg-red-50 dark:text-red-400">{formError.reEnterPassword}</p>
+          <p className="text-red-800 bg-red-50 dark:text-red-400">
+            {formError.reEnterPassword}
+          </p>
+          <label>Role</label>
+          <select
+            id="small"
+            value={formValue?.role}
+            onChange={(e) =>
+              setFormValue((prev) => ({ ...prev, role: e.target.value }))
+            }
+            class="block w-full p-2 mb-6 text-sm text-black-900 border rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
+            <option selected>Choose a roles</option>
+            <option value="admin">admin</option>
+            <option value="user">user</option>
+          </select>
           <button
             onClick={submitHandler}
             className=" mt-4text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"

@@ -29,6 +29,7 @@ const LoginPage = () => {
             throw new Error("Token is not available.");
           }
           localStorage.setItem("token", res.data.token);
+          localStorage.setItem("role", res.data.role);
           displaySuccessToast(res?.data?.message);
           navigator("/");
         }

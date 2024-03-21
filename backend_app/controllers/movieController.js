@@ -100,7 +100,7 @@ exports.deleteMovie = async (req, res) => {
 // Get Movie
 exports.getMovie = async (req, res) => {
   const { page } = req?.query;
-  const limit = 3;
+  const limit = 8;
   try {
     // Find the movie by ID
     const totalPages = await movieSchema.find().countDocuments();

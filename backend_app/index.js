@@ -12,7 +12,8 @@ app.use(express.json());
 require("./routes/movies.routes")(app);
 async function main() {
   try {
-    const db = await mongoose.connect("mongodb://127.0.0.1:27017/movie_app");
+    // need to put in .env
+    const db = await mongoose.connect("mongodb+srv://krishnadev9360:4rImExiIySFue1lq@movie-cluster.o1gehho.mongodb.net/");
     console.log("MongoDB connected");
   } catch (err) {
     console.error("MongoDB connection error:", err);
@@ -37,7 +38,7 @@ app.post("/login", async (req, res) => {
 
         res
           .status(200)
-          .json({ message: "Login successful", token: token, success: true });
+          .json({ message: "Login successful", token: token,role:user?.role, success: true });
       } else {
         res
           .status(401)
@@ -54,7 +55,7 @@ app.post("/login", async (req, res) => {
 
 app.post("/register", async (req, res) => {
   console.log(req.body);
-  const { username, email, password } = req.body;
+  const { username, email, password ,role} = req.body;
   try {
     const existingUser = await User.findOne({ email: email });
     if (existingUser) {
@@ -62,7 +63,7 @@ app.post("/register", async (req, res) => {
         .status(409)
         .json({ message: "User already registered", success: false });
     } else {
-      const newUser = new User({ name: username, email, password });
+      const newUser = new User({ name: username, email, password ,role});
       await newUser.save();
       res.status(200).json({
         message: "Successfully registered. Please login now.",

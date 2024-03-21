@@ -11,7 +11,6 @@ const Form = ({
   formData,
   getAllMovies,
 }) => {
-  console.log({ setShowModal, showModal });
   const { id } = useParams();
   const [formError, setFormError] = useState({});
 
@@ -170,16 +169,13 @@ const Form = ({
                     Poster URL
                   </label>
                   <input
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-64"
                     id="poster"
                     type="url"
                     placeholder="Poster URL"
                     name="poster"
                     value={formData.poster}
                     onChange={handleChange}
-                    defaultValue={
-                      "https://dash-bootstrap-components.opensource.faculty.ai/static/images/placeholder286x180.png"
-                    }
                   />
                 </div>
                 <div className="flex items-center justify-between">
