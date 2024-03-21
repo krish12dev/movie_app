@@ -95,4 +95,24 @@ exports.getMovie = async (req, res) => {
   }
 };
 
+exports.getMoviebyId = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Find the movie by ID
+    const movie = await movieSchema.findById(id);
+
+    if (!movie) {
+      return res.status(404).json({ message: 'Movie not found', success: false });
+    }
+
+    // Return success response with the movie
+    res.status(200).json({ movie, success: true });
+  } catch (error) {
+    // Return error response
+    console.error('Error fetching movie:', error);
+    res.status(500).json({ message: `Internal server error ${error?.message}`, success: false });
+  }
+};
+
 

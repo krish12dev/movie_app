@@ -12,7 +12,8 @@ const RoutePage =() =>{
         <Routes>
             <Route element={<PrivateRoute/>}>
                 <Route path="/" element={<Home/>}/>
-                <Route path="/edit-movie/:id" element={<Form/>}/>
+                <Route path="/:id" element={<Home/>}/>
+                {/* <Route path="/edit-movie/:id" element={<Form/>}/> */}
                 <Route path="/add-movie" element={<Form/>}/>
             </Route>
                 <Route path="/login" element={<LoginPage/>}/>
