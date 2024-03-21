@@ -9,7 +9,7 @@ const port = 8080;
 app.use(cors());
 app.use(express.json());
 
-require('./routes/movies.routes')(app)
+require("./routes/movies.routes")(app);
 async function main() {
   try {
     const db = await mongoose.connect("mongodb://127.0.0.1:27017/movie_app");
@@ -21,11 +21,8 @@ async function main() {
 
 main().catch((err) => console.error(err));
 
-
 const jwt = require("jsonwebtoken");
 const movieSchema = require("./model/movie");
-
-
 
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -38,9 +35,13 @@ app.post("/login", async (req, res) => {
           expiresIn: "1h",
         });
 
-        res.status(200).json({ message: "Login successful", token: token, success: true });
+        res
+          .status(200)
+          .json({ message: "Login successful", token: token, success: true });
       } else {
-        res.status(401).json({ message: "email & Password does not match", success: false });
+        res
+          .status(401)
+          .json({ message: "email & Password does not match", success: false });
       }
     } else {
       res.status(401).json({ message: "User not registered", success: false });
@@ -57,7 +58,9 @@ app.post("/register", async (req, res) => {
   try {
     const existingUser = await User.findOne({ email: email });
     if (existingUser) {
-      res.res.status(409).json({ message: "User already registered", success: false });
+      res.res
+        .status(409)
+        .json({ message: "User already registered", success: false });
     } else {
       const newUser = new User({ name: username, email, password });
       await newUser.save();

@@ -1,7 +1,8 @@
 // Form.js
-import { useState, useEffect } from "react";
+import {  useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { displayErrorToast, displaySuccessToast } from "../../toaster/toaster";
 
 const Form = ({
   setShowModal,
@@ -15,7 +16,6 @@ const Form = ({
 
   const navigator = useNavigate();
   useEffect(() => {
-    debugger;
     if (id) {
       axios
         .get(`http://localhost:8080/movie/${id}`, {
@@ -31,10 +31,11 @@ const Form = ({
             publishYear: formattedPublishYear,
             poster: movie.poster,
           });
+          displaySuccessToast(res?.data?.message);
         })
-        .catch((err) => console.error(err));
+        .catch((err) => displayErrorToast(err?.response?.data?.message));
     }
-  }, [id]);
+  }, [id, setFormData]);
 
   const handleChange = (e) => {
     setFormData({
@@ -45,7 +46,6 @@ const Form = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
     if (id) {
       // Update movie if ID is present
       axios
@@ -56,11 +56,11 @@ const Form = ({
         })
         .then((res) => {
           getAllMovies();
-          setShowModal(false)
+          setShowModal(false);
           navigator("/");
+          displaySuccessToast(res?.data?.message);
         })
-        .catch((err) => console.error(err));
-
+        .catch((err) => displayErrorToast(err?.response?.data?.message));
     } else {
       // Add new movie if no ID is present
       axios
@@ -68,82 +68,12 @@ const Form = ({
           headers: { Authorization: localStorage.getItem("token") },
         })
         .then((res) => {
-          return res.data;
+          displaySuccessToast(res?.data?.message);
+          navigator("/");
         })
-        .catch((err) => console.error(err));
+        .catch((err) => displayErrorToast(err?.response?.data?.message));
     }
-    navigator("/");
   };
-  console.log({ showModal });
-
-  // return (
-  // <div className="w-full ">
-  //   <form
-  //     className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-  //     onSubmit={handleSubmit}
-  //   >
-  //     <div className="mb-4">
-  //       <label
-  //         className="block text-gray-700 text-sm font-bold mb-2"
-  //         htmlFor="title"
-  //       >
-  //         Movie Title
-  //       </label>
-  //       <input
-  //         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-  //         id="title"
-  //         type="text"
-  //         placeholder="Movie Title"
-  //         name="title"
-  //         value={formData.title}
-  //         onChange={handleChange}
-  //       />
-  //     </div>
-  //     <div className="mb-4">
-  //       <label
-  //         className="block text-gray-700 text-sm font-bold mb-2"
-  //         htmlFor="publishYear"
-  //       >
-  //         Publish Year
-  //       </label>
-  //       <input
-  //         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-  //         id="publishYear"
-  //         type="date"
-  //         placeholder="Publish Year"
-  //         name="publishYear"
-  //         value={formData.publishYear}
-  //         onChange={handleChange}
-  //       />
-  //     </div>
-  //     <div className="mb-4">
-  //       <label
-  //         className="block text-gray-700 text-sm font-bold mb-2"
-  //         htmlFor="poster"
-  //       >
-  //         Poster URL
-  //       </label>
-  //       <input
-  //         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-  //         id="poster"
-  //         type="url"
-  //         placeholder="Poster URL"
-  //         name="poster"
-  //         value={formData.poster}
-  //         onChange={handleChange}
-  //       />
-  //     </div>
-  //     <div className="flex items-center justify-between">
-  //       <button
-  //         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-  //         type="submit"
-  //       >
-  //         {id ? "Update Movie" : "Add Movie"}
-  //       </button>
-  //     </div>
-  //   </form>
-  // </div>
-  // );
 
   return showModal ? (
     <>
@@ -225,7 +155,7 @@ const Form = ({
                 </div>
                 <div className="flex items-center justify-between">
                   <button
-                    onClick={(e)=>handleSubmit(e)}
+                    onClick={(e) => handleSubmit(e)}
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="button"
                   >

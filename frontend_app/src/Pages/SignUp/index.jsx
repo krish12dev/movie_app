@@ -1,34 +1,37 @@
-import React, { useEffect, useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Signup.css";
 import Input from "../../Components/Input";
 import { Strings } from "../../Strings";
-import axios from 'axios'
+import axios from "axios";
+import { displayErrorToast, displaySuccessToast } from "../../toaster/toaster";
 
 const SignUp = () => {
-  const initialState = {username: "", email: "", password: "", reEnterPassword: "" };
+  const initialState = {
+    username: "",
+    email: "",
+    password: "",
+    reEnterPassword: "",
+  };
   const [formValue, setFormValue] = useState(initialState);
   const [formError, setFormError] = useState({});
-  const [formOutput, setFormOutput] = useState([]);
-  const [editableIndex, setEditableIndex] = useState(-1);
-  const [isEditable, setIsEditable] = useState(false);
-  const [isSubmit, setSubmit] = useState(false);
+  const navigate = useNavigate();
 
   const submitHandler = (e) => {
     e.preventDefault();
-    debugger
-    const {username,email,password,reEnterPassword} = formValue
-    if(username && email && (password === reEnterPassword)){
-      axios.post("http://localhost:8080/register",formValue)
-      .then((res)=>{
-        console.log("check the  status of api",res)
-      })
-      .catch((err)=>{
-        return err
-      })
+    debugger;
+    const { username, email, password, reEnterPassword } = formValue;
+    if (username && email && password === reEnterPassword) {
+      axios
+        .post("http://localhost:8080/register", formValue)
+        .then((res) => {
+          displaySuccessToast(res?.data?.message);
+          navigate("/login");
+        })
+        .catch((err) => displayErrorToast(err?.response?.data?.message));
     }
     setFormError(validate(formValue));
-    console.log("formValue",formValue)
+    console.log("formValue", formValue);
   };
   const validate = (values) => {
     const errors = {};
@@ -43,9 +46,17 @@ const SignUp = () => {
   };
   return (
     <>
-      <form onSubmit={submitHandler}>
+      <form
+        className="flex flex-col justify-center items-center mt-32 bg-slate-50 rounded-lg shadow-lg"
+        onSubmit={submitHandler}
+      >
+        <div className="imageContainer">
+          <h4 className="text-4xl font-Medium mt-5">Sign Up</h4>
+        </div>
         <div className="container">
-        <label htmlFor="username">{Strings.userName}</label>
+          <label className="font-medium" htmlFor="username">
+            {Strings.userName}
+          </label>
           <Input
             types="text"
             names="username"
@@ -53,7 +64,9 @@ const SignUp = () => {
             onChangeHandler={changeHandler}
             placeholdername={Strings.userName}
           />
-          <label htmlFor="emnail">{Strings.email}</label>
+          <label className="font-medium" htmlFor="emnail">
+            {Strings.email}
+          </label>
           <Input
             types="email"
             names="email"
@@ -62,7 +75,9 @@ const SignUp = () => {
             placeholdername={Strings.email}
           />
           <p>{formError.email}</p>
-          <label htmlFor="psw">Password</label>
+          <label className="font-medium" htmlFor="psw">
+            Password
+          </label>
           <Input
             types="password"
             names="password"
@@ -70,7 +85,7 @@ const SignUp = () => {
             onChangeHandler={changeHandler}
             placeholdername={Strings.password}
           />
-          <label>Confirm password</label>
+          <label className="font-medium">Confirm password</label>
           <Input
             types="password"
             names="reEnterPassword"
@@ -78,12 +93,16 @@ const SignUp = () => {
             onChangeHandler={changeHandler}
             placeholdername={Strings.confirmPassword}
           />
-          <button className="registation" type="submit" onClick={submitHandler}>
+          <button
+            onClick={submitHandler}
+            className=" mt-4text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+            type="button"
+          >
             {Strings.register}
           </button>
         </div>
         <div class="container signin">
-          <p>
+          <p cla>
             Already have an account? <Link to="/login">SignIn</Link>.
           </p>
         </div>

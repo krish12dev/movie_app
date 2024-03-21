@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Pagination from "../../Components/Pagination";
 import { setTotalPageCount } from "../../helper";
 import Form from "../Movies/Form";
+import { displayErrorToast, displaySuccessToast } from "../../toaster/toaster";
 
 const Home = () => {
   const [state, setState] = useState([]); // Track the ID of the movie being edited
@@ -24,9 +25,7 @@ const Home = () => {
         },
       })
       .then((res) => setState(res?.data?.movie))
-      .catch((err) => {
-        return err;
-      });
+      .catch((err) => displayErrorToast(err?.response?.data?.message));
   };
   useEffect(() => {
     getAllMovies();
@@ -40,10 +39,11 @@ const Home = () => {
         headers: { authorization: localStorage.getItem("token") },
       })
       .then((res) => {
-        console.log(res);
         setState(state.filter((item) => item._id !== id));
+        displaySuccessToast(res?.data?.message)
+
       })
-      .catch((err) => err);
+      .catch((err) => displayErrorToast(err?.response?.data?.message));
   };
   const addHandler = () => {
     navigator("/add-movie");

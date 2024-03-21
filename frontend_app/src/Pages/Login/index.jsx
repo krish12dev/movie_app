@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Input from "../../Components/Input";
 import { Strings } from "../../Strings";
 import { Link, Outlet, useNavigate } from "react-router-dom";
@@ -33,7 +33,7 @@ const LoginPage = () => {
           navigator("/");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => displayErrorToast(err?.response?.data?.message));
   };
   const validate = (values) => {
     const errors = {};
@@ -54,34 +54,14 @@ const LoginPage = () => {
     const { name, value } = e.target;
     setFormValue({ ...formValue, [name]: value });
   };
-  //   const deleteHandler =(index)=>{
-  //     const recentdata = (output.filter((item,i)=> i !== index))
-  //     setOutPut(recentdata)
-
-  //   }
-  //   const editHandler =(index) =>{
-  //     const selectItem = output[index]
-  //     setFormValue(selectItem)
-  //     setEditableIndex(index)
-  //     setEditable(true)
-
-  //   }
-  //   const updateHandler =(e,index) =>{
-  //     e.preventDefault()
-  //     const updateData = [...output]
-  //     if(editableIndex !== null && editableIndex >=0){
-  //       updateData[editableIndex] = formValue
-  //       setEditable(false)
-  //       setOutPut(updateData)
-  //       setFormValue(initialState)
-  //     }
-  //   }
-
   return (
     <>
-      <form onSubmit={submitHandler}>
+      <form
+        className="flex flex-col justify-center items-center mt-32 bg-slate-50 rounded-lg shadow-lg"
+        onSubmit={submitHandler}
+      >
         <div className="imageContainer">
-          <img src="img_avatar2.png" alt="company logo" className="avatar" />
+          <h4 className="text-4xl font-Medium mt-5">Login</h4>
         </div>
         <div className="container">
           <label htmlFor="email">
@@ -106,24 +86,17 @@ const LoginPage = () => {
             placeholdername={Strings.password}
           />
           <p className="errorfield">{formError.password}</p>
-          <button type="submit">Login</button>
-          <label>
-            <Input
-              types="checkbox"
-              names="checkbox"
-              values={formValue.checkbox}
-              onChangeHandler={changeHandler}
-              placeholdername={Strings.emailOrPhoneNumber}
-            />
-            Remember me
-          </label>
         </div>
         <div className="container">
-          <span>
-            <Link to="/forgot_password">Forgot Password</Link>
-          </span>
-          <span className="sign_up">
-            <Link to="/signup">Sign up</Link>
+          <button
+            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+            type="button"
+            onClick={submitHandler}
+          >
+            Login
+          </button>
+          <span className="sign_up text-blue-700">
+            <a href="/signup">Sign up</a>
           </span>
         </div>
         <Outlet />
