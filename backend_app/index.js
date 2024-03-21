@@ -58,13 +58,13 @@ app.post("/register", async (req, res) => {
   try {
     const existingUser = await User.findOne({ email: email });
     if (existingUser) {
-      res.res
+      res
         .status(409)
         .json({ message: "User already registered", success: false });
     } else {
       const newUser = new User({ name: username, email, password });
       await newUser.save();
-      res.res.status(200).json({
+      res.status(200).json({
         message: "Successfully registered. Please login now.",
         success: true,
       });

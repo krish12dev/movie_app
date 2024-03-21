@@ -43,8 +43,8 @@ const Form = ({
     if (!values.title) {
       errors.title = "Please enter movie name";
     }
-    if(!values.publishYear){
-      errors.publishYear = "Add publish year date"
+    if (!values.publishYear) {
+      errors.publishYear = "Add publish year date";
     }
     return errors;
   };
@@ -85,8 +85,11 @@ const Form = ({
           headers: { Authorization: localStorage.getItem("token") },
         })
         .then((res) => {
+          getAllMovies();
           displaySuccessToast(res?.data?.message);
+          setShowModal(false);
           navigator("/");
+          setFormData({});
         })
         .catch((err) => displayErrorToast(err?.response?.data?.message));
     }
@@ -174,7 +177,9 @@ const Form = ({
                     name="poster"
                     value={formData.poster}
                     onChange={handleChange}
-                    defaultValue={"https://dash-bootstrap-components.opensource.faculty.ai/static/images/placeholder286x180.png"}
+                    defaultValue={
+                      "https://dash-bootstrap-components.opensource.faculty.ai/static/images/placeholder286x180.png"
+                    }
                   />
                 </div>
                 <div className="flex items-center justify-between">
