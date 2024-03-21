@@ -1,29 +1,43 @@
 import { useEffect, useState } from "react";
 import Input from "../../Components/Input";
 import { Strings } from "../../Strings";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./login.css";
+
 const LoginPage = () => {
-  const initialState = { username: "", password: "", checkbox: true };
+  // all local states
+  const initialState = { email: "", password: "", checkbox: true };
   const [formValue, setFormValue] = useState(initialState);
   const [formError, setFormError] = useState({});
-  const [submitValue, setSubmitValue] = useState(false);
-  const [output, setOutPut] = useState([]);
-  const [editableIndex, setEditableIndex] = useState(-1);
-  const [isEditable, setEditable] = useState(false);
+
+  // all hooks
+  const navigator = useNavigate()
+
+  // all effects
 
   const submitHandler = (e) => {
     e.preventDefault();
     setFormError(validate(formValue));
-    setSubmitValue(true);
-    const currentdata = [...output, formValue];
-    setOutPut(currentdata);
-    setFormValue(initialState);
+    axios.post("http://localhost:8080/login",formValue)
+    .then((res)=>{
+      console.log({res});
+     if(res.data.success){
+      if(!res?.data?.token){
+        throw new Error('Token is not available.')
+      }
+        localStorage.setItem("token",res.data.token)
+        navigator('/')
+        alert(res?.data?.message)
+     }
+      
+    })
+    .catch((err)=> console.log(err))
   };
   const validate = (values) => {
     const errors = {};
-    if (!values.username) {
-      errors.username = "Username is required!";
+    if (!values.email) {
+      errors.email = "Email is required!";
     }
     if (!values.password) {
       errors.password = "Password is required";
@@ -69,17 +83,17 @@ const LoginPage = () => {
           <img src="img_avatar2.png" alt="company logo" className="avatar" />
         </div>
         <div className="container">
-          <label htmlFor="uname">
-            <b>Username</b>
+          <label htmlFor="email">
+            <b>{Strings.email}</b>
           </label>
           <Input
             types="text"
-            names="username"
-            values={formValue.username}
+            names="email"
+            values={formValue.email}
             onChangeHandler={changeHandler}
             placeholdername={Strings.emailOrPhoneNumber}
           />
-          <p className="errorField">{formError.username}</p>
+          <p className="errorField">{formError.email}</p>
           <label htmlFor="password">
             <b>password</b>
           </label>

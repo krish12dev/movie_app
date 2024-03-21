@@ -9,6 +9,7 @@ export const Strings = {
     email: "User Email",
     createNewPassword: "Create new password",
     confirmPassword: "Confirm password",
-    userName: "User Name"
+    userName: "User Name",
+    register: "Register",
 
 }
