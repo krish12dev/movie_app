@@ -37,15 +37,14 @@ const LoginPage = () => {
   };
   const validate = (values) => {
     const errors = {};
+    const emailValid = /\S+@\S+\.\S+/;
     if (!values.email) {
       errors.email = "Email is required!";
+    } else if (!emailValid.test(values.email)) { // Use test() method to check email validity
+      errors.email = "Please enter a valid email address";
     }
     if (!values.password) {
       errors.password = "Password is required";
-    } else if (values.password.length < 4) {
-      errors.password = "Password must be more than 4 characters";
-    } else if (values.password.length > 10) {
-      errors.password = "Password cannot exceed more than 10 characters";
     }
     return errors;
   };
@@ -74,7 +73,7 @@ const LoginPage = () => {
             onChangeHandler={changeHandler}
             placeholdername={Strings.emailOrPhoneNumber}
           />
-          <p className="errorField">{formError.email}</p>
+          <p className="text-red-800 bg-red-50 dark:text-red-400" >{formError.email}</p>
           <label htmlFor="password">
             <b>password</b>
           </label>
@@ -85,7 +84,7 @@ const LoginPage = () => {
             onChangeHandler={changeHandler}
             placeholdername={Strings.password}
           />
-          <p className="errorfield">{formError.password}</p>
+          <p className="text-red-800 bg-red-50 dark:text-red-400">{formError.password}</p>
         </div>
         <div className="container">
           <button
@@ -96,7 +95,7 @@ const LoginPage = () => {
             Login
           </button>
           <span className="sign_up text-blue-700">
-            <a href="/signup">Sign up</a>
+            <Link to="/signup">Sign up</Link>
           </span>
         </div>
         <Outlet />

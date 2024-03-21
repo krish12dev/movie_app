@@ -6,6 +6,7 @@ import Pagination from "../../Components/Pagination";
 import { setTotalPageCount } from "../../helper";
 import Form from "../Movies/Form";
 import { displayErrorToast, displaySuccessToast } from "../../toaster/toaster";
+// import { FiPlus } from "react-icons/fi";
 
 const Home = () => {
   const [state, setState] = useState([]); // Track the ID of the movie being edited
@@ -40,8 +41,7 @@ const Home = () => {
       })
       .then((res) => {
         setState(state.filter((item) => item._id !== id));
-        displaySuccessToast(res?.data?.message)
-
+        displaySuccessToast(res?.data?.message);
       })
       .catch((err) => displayErrorToast(err?.response?.data?.message));
   };
@@ -59,7 +59,13 @@ const Home = () => {
         showModal={showModal}
         setShowModal={setShowModal}
       />
-      <button onClick={addHandler}>Add Movie</button>
+      <div class="flex justify-end">
+        <button  onClick={addHandler} class=" w-32 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline p-3 m-6">
+        {/* <FiPlus />   */}
+        Add Movie
+        </button>
+      </div>
+      {/* <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={addHandler}>Add Movie</button> */}
       {state?.map((item) => {
         return (
           <>
@@ -77,11 +83,11 @@ const Home = () => {
           </>
         );
       })}
-      <Pagination
+      {/* <Pagination
         page={2}
         onPageChangeHandler={pageChangeHandler}
         totalPages={totalpage > 0 ? totalpage : 1}
-      />
+      /> */}
     </>
   );
 };

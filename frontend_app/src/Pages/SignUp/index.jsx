@@ -19,7 +19,6 @@ const SignUp = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    debugger;
     const { username, email, password, reEnterPassword } = formValue;
     if (username && email && password === reEnterPassword) {
       axios
@@ -35,8 +34,20 @@ const SignUp = () => {
   };
   const validate = (values) => {
     const errors = {};
+    const emailValid = /\S+@\S+\.\S+/;
     if (!values.email) {
-      errors.email = "Please enter valid email id";
+      errors.email = "Email is required!";
+    } else if (!emailValid.test(values.email)) {
+      errors.email = "Please enter a valid email address";
+    }
+    if(!values.password){
+      errors.password = "Please Enter password"
+    }if(!values?.userName){
+      errors.userName = "Please enter user name"
+    }if(!values.reEnterPassword){
+      errors.reEnterPassword = "Please enter the confirm password"
+    }else if(values?.password !== values?.reEnterPassword){
+      errors.reEnterPassword = "Password didn't match"
     }
     return errors;
   };
@@ -64,6 +75,7 @@ const SignUp = () => {
             onChangeHandler={changeHandler}
             placeholdername={Strings.userName}
           />
+          <p className="text-red-800 bg-red-50 dark:text-red-400">{formError.userName}</p>
           <label className="font-medium" htmlFor="emnail">
             {Strings.email}
           </label>
@@ -74,7 +86,7 @@ const SignUp = () => {
             onChangeHandler={changeHandler}
             placeholdername={Strings.email}
           />
-          <p>{formError.email}</p>
+           <p className="text-red-800 bg-red-50 dark:text-red-400">{formError.email}</p>
           <label className="font-medium" htmlFor="psw">
             Password
           </label>
@@ -85,6 +97,7 @@ const SignUp = () => {
             onChangeHandler={changeHandler}
             placeholdername={Strings.password}
           />
+           <p className="text-red-800 bg-red-50 dark:text-red-400">{formError.password}</p>
           <label className="font-medium">Confirm password</label>
           <Input
             types="password"
@@ -93,6 +106,7 @@ const SignUp = () => {
             onChangeHandler={changeHandler}
             placeholdername={Strings.confirmPassword}
           />
+           <p className="text-red-800 bg-red-50 dark:text-red-400">{formError.reEnterPassword}</p>
           <button
             onClick={submitHandler}
             className=" mt-4text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"

@@ -1,5 +1,5 @@
 // Form.js
-import {  useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { displayErrorToast, displaySuccessToast } from "../../toaster/toaster";
@@ -13,6 +13,7 @@ const Form = ({
 }) => {
   console.log({ setShowModal, showModal });
   const { id } = useParams();
+  const [formError, setFormError] = useState({});
 
   const navigator = useNavigate();
   useEffect(() => {
@@ -37,6 +38,17 @@ const Form = ({
     }
   }, [id, setFormData]);
 
+  const validate = (values) => {
+    const errors = {};
+    if (!values.title) {
+      errors.title = "Please enter movie name";
+    }
+    if(!values.publishYear){
+      errors.publishYear = "Add publish year date"
+    }
+    return errors;
+  };
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -46,6 +58,11 @@ const Form = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const errObj = validate(formData);
+    if (Object.keys(errObj).length > 0) {
+      setFormError(errObj);
+      return;
+    }
     if (id) {
       // Update movie if ID is present
       axios
@@ -118,6 +135,9 @@ const Form = ({
                     value={formData.title}
                     onChange={handleChange}
                   />
+                  <p className="text-red-800 bg-red-50 dark:text-red-400">
+                    {formError.title}
+                  </p>
                 </div>
                 <div className="mb-4">
                   <label
@@ -135,6 +155,9 @@ const Form = ({
                     value={formData.publishYear}
                     onChange={handleChange}
                   />
+                  <p className="text-red-800 bg-red-50 dark:text-red-400">
+                    {formError.publishYear}
+                  </p>
                 </div>
                 <div className="mb-4">
                   <label
@@ -151,6 +174,7 @@ const Form = ({
                     name="poster"
                     value={formData.poster}
                     onChange={handleChange}
+                    defaultValue={"https://dash-bootstrap-components.opensource.faculty.ai/static/images/placeholder286x180.png"}
                   />
                 </div>
                 <div className="flex items-center justify-between">
